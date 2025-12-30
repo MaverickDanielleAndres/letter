@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Go Out With Me?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #FFF4E0 0%, #FFE5B4 50%, #FFDAB9 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: 'Letter from Maverick 💛';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF6B6B;
+            text-shadow: 2px 2px 4px rgba(255, 193, 7, 0.3);
+            animation: sparkle 3s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Letter Envelope Styles - Realistic */
+        .letter-envelope {
+            cursor: pointer;
+            perspective: 1000px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(2deg); }
+        }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: #FFD700;
+            border-radius: 5px;
+            box-shadow: 0 15px 40px rgba(255, 193, 7, 0.4);
+            transition: all 0.3s;
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 50px rgba(255, 193, 7, 0.6);
+        }
+
+        .envelope::before {
+            content: '💌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            z-index: 1;
+        }
+
+        .envelope .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            border-top: 90px solid #FFC107;
+            transform-origin: top center;
+            transition: transform 0.5s;
+            z-index: 2;
+        }
+
+        .envelope:hover .flap {
+            transform: rotateX(-30deg);
+        }
+
+        /* Tap instruction */
+        .tap-instruction {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FF6B6B;
+            font-size: 18px;
+            font-weight: 600;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* Opened Letter Styles */
+        .opened-letter {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .letter-paper {
+            background: linear-gradient(to bottom, #FFFACD 0%, #FFF8DC 100%);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 140, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            cursor: pointer;
+            animation: unfold 0.8s ease-out;
+            border: 3px solid #FFD700;
+            position: relative;
+        }
+
+        .letter-paper::before {
+            content: '💛';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 32px;
+        }
+
+        .letter-paper::after {
+            content: '💛';
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            font-size: 32px;
+        }
+
+        @keyframes unfold {
+            from {
+                transform: scale(0.3) rotateY(90deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        .letter-paper p {
+            font-size: 20px;
+            line-height: 1.8;
+            color: #8B4513;
+            text-align: justify;
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #FFFACD 0%, #FFE4B5 100%);
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 25px 70px rgba(255, 140, 0, 0.4);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            animation: slideIn 0.6s ease-out;
+            border: 4px solid #FFD700;
+            position: relative;
+        }
+
+   
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-content p {
+            font-size: 22px;
+            line-height: 1.8;
+            color: #8B4513;
+            font-weight: 600;
+        }
+
+        .response-btn {
+            margin-top: 30px;
+            padding: 18px 50px;
+            font-size: 22px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B4513;
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .response-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .response-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Main Content Styles */
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .header_text {
+            color: #FF6B6B;
+            font-size: 2.2em;
+            margin: 10px 0;
+            text-shadow: 3px 3px 6px rgba(255, 193, 7, 0.4);
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .gif_container {
+            margin: 40px 0;
+            animation: wiggle 1.5s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .gif_container img {
+            max-width: 350px;
+            width: 90%;
+            border-radius: 30px;
+            box-shadow: 0 15px 50px rgba(255, 107, 107, 0.3);
+            border: 5px solid #FFD700;
+        }
+
+        .buttons {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 20px 60px;
+            font-size: 26px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        #yesButton {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #8B4513;
+            animation: glow 2s infinite;
+            z-index: 10;
+            position: absolute;
+            left: 30%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4); }
+            50% { box-shadow: 0 8px 40px rgba(255, 215, 0, 0.8); }
+        }
+
+        #yesButton:hover {
+            transform: scale(1.15);
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+        }
+
+        #noButton {
+            background: linear-gradient(135deg, #FFB6B6 0%, #FFA8A8 100%);
+            color: #8B4513;
+            position: absolute;
+            transition: all 0.3s ease;
+            left: 70%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #noButton:active {
+            transform: scale(0.95);
+        }
+
+        
+        /* Success Message */
+        .success-message {
+            animation: celebrate 0.6s ease-out;
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+                    @media (max-width: 768px) {
+            body::before {
+                font-size: 18px;
+                top: 10px;
+            }
+
+            .header_text {
+                font-size: 1.6em;
+                margin: 8px 0;
+            }
+
+            .gif_container {
+                margin: 25px 0;
+            }
+
+            .gif_container img {
+                max-width: 200px;
+            }
+
+            .btn {
+                padding: 14px 35px;
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+
+            .response-btn {
+                padding: 14px 35px;
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+
+            .letter-paper, .modal-content {
+                padding: 30px 20px;
+            }
+
+            .letter-paper p {
+                font-size: 15px;
+            }
+
+            .modal-content p {
+                font-size: 17px;
+            }
+
+            .envelope {
+                width: 200px;
+                height: 130px;
+            }
+
+            .envelope .flap {
+                border-left: 100px solid transparent;
+                border-right: 100px solid transparent;
+                border-top: 65px solid #FFC107;
+            }
+
+            .envelope::before {
+                font-size: 32px;
+            }
+
+            .buttons {
+                height: 180px;
+                gap: 0;
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body::before {
+                font-size: 16px;
+            }
+
+            .header_text {
+                font-size: 1.3em;
+                margin: 6px 0;
+            }
+
+            .gif_container {
+                margin: 20px 0;
+            }
+
+            .gif_container img {
+                max-width: 180px;
+            }
+
+            .btn {
+                padding: 12px 28px;
+                font-size: 16px;
+                letter-spacing: 1px;
+            }
+
+            .response-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+
+            .letter-paper p {
+                font-size: 13px;
+            }
+
+            .modal-content p {
+                font-size: 15px;
+            }
+
+            .buttons {
+                height: 160px;
+            }
+
+            .envelope {
+                width: 180px;
+                height: 120px;
+            }
+
+            .envelope .flap {
+                border-left: 90px solid transparent;
+                border-right: 90px solid transparent;
+                border-top: 60px solid #FFC107;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Letter Envelope -->
+    <div id="letterEnvelope" class="letter-envelope">
+        <div class="envelope">
+            <div class="flap"></div>
+        </div>
+        <div class="tap-instruction">👆Tap!</div>
+    </div>
+
+    <!-- Opened Letter -->
+    <div id="openedLetter" class="opened-letter">
+        <div class="letter-paper">
+            <p>Hi Bebilab,</p>
+            <br>
+            <p>I know I promised you we'd meet at 5 for our boodle fight date. I know you were excited and looking forward to it love. Pero di ko po talaga inaasahan na 5 din pala ang start ng internship ko.</p>
+            <br>
+            <p>I'm so sorry mahal ko. Even though we can't make at 5 anymore, I want you to know that my promise to you still stands. Hindi ko po yan cinancel, naadjust lang po love. You mean everything to me, and I will make this up to you in the most special way.</p>
+            <br>
+            <p>I love you so much, I'll make it up to you bebi ko💛</p>
+            <br>
+            <p style="text-align: right; font-style: italic;">- Your Mavi</p>
+            <p style="text-align: right; font-style: italic;">Tap Again Please</p>
+        </div>
+
+    </div>
+
+    <!-- Modal for Question -->
+    <div id="questionModal" class="modal">
+        <div class="modal-content">
+            <p>Can I make it up to you, love?</p>
+            <br>
+            <p>On January 2, I want to take you on a date. And on January 10, kung okay lang po dun tayo mag boodle fight.</p>
+            <br>
+            <p style="font-weight: 700; color: #FF6B6B;">Promise love babawi poko, I love you always mahal 💛✨</p>
+            <button class="response-btn" id="responseBtn">Response</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="container">
+        <div>
+            <h1 class="header_text">Will you let me make it up to you sa January 2</h1>
+            <h1 class="header_text">(and 10 kung kaya, please please please)</h1>
+        </div>
+        <div class="gif_container">
+            <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDdtZ2JiZDR0a3lvMWF4OG8yc3p6Ymdvd3g2d245amdveDhyYmx6eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute animated illustration">
+        </div>
+        <div class="buttons">
+            <button class="btn" id="yesButton">Yes! 💛</button>
+            <button class="btn" id="noButton">No</button>
+        </div>
+    </div>
+
+    <script>
+        let clickCount = 0;
+
+        // First click: Open the envelope and show the letter
+        document.getElementById('letterEnvelope').addEventListener('click', function() {
+            if (clickCount === 0) {
+                clickCount++;
+                document.getElementById('letterEnvelope').style.display = 'none';
+                document.getElementById('openedLetter').style.display = 'flex';
+            }
+        });
+
+        // Second click: Show the modal
+        document.getElementById('openedLetter').addEventListener('click', function() {
+            if (clickCount === 1) {
+                clickCount++;
+                document.getElementById('openedLetter').style.display = 'none';
+                document.getElementById('questionModal').style.display = 'flex';
+            }
+        });
+
+        // Response button click: Show Yes/No buttons
+        document.getElementById('responseBtn').addEventListener('click', function() {
+            document.getElementById('questionModal').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'flex';
+        });
+
+        // Confetti function
+        function createConfetti() {
+            const colors = ['#FFD700', '#FFA500', '#FF6B6B', '#FFB6B6', '#FFF4E0'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 20);
+            }
+        }
+
+        // Yes button - show success message with confetti
+        document.getElementById('yesButton').addEventListener('click', function() {
+            createConfetti();
+            document.getElementById('mainContent').innerHTML = `
+                <div class="success-message">
+                    <h1 class="header_text" style="font-size: 2.5em; color: #FFD700;">It's a date!</h1>
+                    <h1 class="header_text" style="font-size: 2.0em; margin-top: 20px;">Bawi ako sayo mahal pangako po! I love you so much mahal ko!</h1>
+                </div>
+            `;
+        });
+
+        const noButton = document.getElementById('noButton');
+
+function moveNoButton(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Force layout recalculation
+    noButton.style.transform = 'none';
+
+    // Use client dimensions (more reliable on mobile)
+    const viewportWidth = document.documentElement.clientWidth || window.innerWidth;
+    const viewportHeight = document.documentElement.clientHeight || window.innerHeight;
+
+    // Get current button size
+    const buttonRect = noButton.getBoundingClientRect();
+    const buttonWidth = buttonRect.width;
+    const buttonHeight = buttonRect.height;
+
+    // Add a small margin so it never hugs the edge (better for touch)
+    const margin = 16; // pixels
+
+    // Calculate safe bounds
+    const minX = margin;
+    const maxX = viewportWidth - buttonWidth - margin;
+    const minY = margin;
+    const maxY = viewportHeight - buttonHeight - margin;
+
+    // Clamp to ensure valid range (in case button is wider than screen)
+    const safeMinX = Math.min(minX, maxX);
+    const safeMinY = Math.min(minY, maxY);
+
+    // Generate random position within safe area
+    let newX = safeMinX + Math.random() * Math.max(0, maxX - safeMinX);
+    let newY = safeMinY + Math.random() * Math.max(0, maxY - safeMinY);
+
+    // Apply position using viewport-based coordinates
+    noButton.style.position = 'fixed'; // ← critical for mobile!
+    noButton.style.left = `${newX}px`;
+    noButton.style.top = `${newY}px`;
+}
+
+// Apply to all interaction types
+noButton.addEventListener('mouseover', moveNoButton);
+noButton.addEventListener('touchstart', moveNoButton);
+noButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    moveNoButton(e);
+});
+
+        // For desktop - mouseover
+        noButton.addEventListener('mouseover', moveNoButton);
+        
+        // For mobile - touchstart (fires before click)
+        noButton.addEventListener('touchstart', moveNoButton);
+        
+        // Prevent click on No button (backup)
+        noButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            moveNoButton(e);
+        });
+    </script>
+</body>
+</html>
